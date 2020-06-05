@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
   buttonIcon: {
     height: 60,
     width: 60,
+    paddingLeft: 18,
     backgroundColor: 'rgba(0,0,0,0.1)',
     justifyContent: 'center',
   },
