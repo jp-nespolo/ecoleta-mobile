@@ -10,7 +10,7 @@ import {
   Dimensions,
   Alert,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import MapView, { Marker } from 'react-native-maps';
 import Svg, { SvgUri } from 'react-native-svg';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -32,12 +32,21 @@ interface Point {
   name: string;
 }
 
+interface Params {
+  uf: string;
+  city: string;
+}
+
 const img = {
   uri:
     'https://images.unsplash.com/photo-1578422558405-bd41637e2f41?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=350&q=40',
 };
 
 const Points = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const routeParams = route.params as Params;
+
   const [items, setItems] = useState<Item[]>([]);
   const [points, setPoints] = useState<Point[]>([]);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
@@ -73,15 +82,13 @@ const Points = () => {
     api
       .get('/points', {
         params: {
-          city: 'Água Boa',
-          uf: 'MT',
-          items: [1, 3, 4],
+          city: routeParams.city,
+          uf: routeParams.uf,
+          items: selectedItems,
         },
       })
       .then((res) => setPoints(res.data));
-  }, []);
-
-  const navigation = useNavigation();
+  }, [selectedItems]);
 
   function handleNavigateBack() {
     navigation.goBack();

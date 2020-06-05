@@ -1,39 +1,80 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Feather as Icon } from '@expo/vector-icons';
-import { View, ImageBackground, Image, StyleSheet, Text } from 'react-native';
-import { RectButton } from 'react-native-gesture-handler';
+import {
+  View,
+  ImageBackground,
+  Image,
+  StyleSheet,
+  Text,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
+import { RectButton, TextInput } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
 const Home = () => {
+  const [uf, setUf] = useState('');
+  const [city, setCity] = useState('');
+
   const navigation = useNavigation();
 
   function handleNavigateToPoints() {
-    navigation.navigate('Points');
+    navigation.navigate('Points', {
+      uf,
+      city,
+    });
   }
   return (
-    <ImageBackground
-      source={require('../../assets/home-background.png')}
-      style={styles.container}
-      imageStyle={{ width: 274, height: 368 }}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <View style={styles.main}>
-        <Image source={require('../../assets/logo.png')} />
-        <Text style={styles.title}> Seu marketplace de coleta de residuo</Text>
-        <Text style={styles.description}>
-          Ajudamos pessoas a encontrarem pontos de coleta de forma eficiente
-        </Text>
-      </View>
-      <View style={styles.footer}>
-        <RectButton style={styles.button} onPress={handleNavigateToPoints}>
-          <View style={styles.buttonIcon}>
-            <Text>
-              <Icon name="arrow-right" color="#FFF" size={24}></Icon>
+      <ImageBackground
+        source={require('../../assets/home-background.png')}
+        style={styles.container}
+        imageStyle={{ width: 274, height: 368 }}
+      >
+        <View style={styles.main}>
+          <Image source={require('../../assets/logo.png')} />
+          <View>
+            <Text style={styles.title}>
+              Seu marketplace de coleta de resíduos
+            </Text>
+            <Text style={styles.description}>
+              Ajudamos pessoas a encontrarem pontos de coleta de forma eficiente
             </Text>
           </View>
-          <Text style={styles.buttonText}>Entrar</Text>
-        </RectButton>
-      </View>
-    </ImageBackground>
+        </View>
+
+        <View style={styles.footer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Digite a UF"
+            autoCapitalize="characters"
+            maxLength={2}
+            autoCorrect={false}
+            value={uf}
+            onChangeText={setUf}
+          ></TextInput>
+
+          <TextInput
+            style={styles.input}
+            placeholder="Digite a cidade"
+            value={city}
+            onChangeText={setCity}
+          ></TextInput>
+
+          <RectButton style={styles.button} onPress={handleNavigateToPoints}>
+            <View style={styles.buttonIcon}>
+              <Text>
+                <Icon name="arrow-right" color="#FFF" size={24}></Icon>
+              </Text>
+            </View>
+            <Text style={styles.buttonText}>Entrar</Text>
+          </RectButton>
+        </View>
+      </ImageBackground>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -65,7 +106,17 @@ const styles = StyleSheet.create({
   footer: {},
   select: {},
 
+  input: {
+    height: 60,
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+    marginBottom: 8,
+    paddingHorizontal: 16,
+    fontSize: 16,
+  },
+
   button: {
+    marginTop: 8,
     backgroundColor: '#34CB79',
     height: 60,
     flexDirection: 'row',
